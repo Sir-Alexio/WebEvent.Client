@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient("Client", c => c.BaseAddress = new System.Uri("https://localhost:7141/"));
 
 var app = builder.Build();
 
