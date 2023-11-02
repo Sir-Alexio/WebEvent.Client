@@ -39,6 +39,27 @@ namespace WebEvent.Client.Controllers
             return View("AllEvents", deserializedEventDtos);
         }
 
+        [Route("registrate-to-event/{eventName}")]
+        public async Task<IActionResult> RegistrateToEvent(string eventName)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["token"]);
+
+            JsonContent content = JsonContent.Create(eventName);
+
+            HttpResponseMessage response = await _httpClient.PostAsync($"api/event/registrate-user",content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                CustomException? errorMessage = System.Text.Json.JsonSerializer.Deserialize<CustomException>(await response.Content.ReadAsStringAsync());
+
+                ViewBag.Message = errorMessage.Message;
+
+                return BadRequest(errorMessage.Message);
+            }
+
+            return RedirectToAction("events");
+        }
+
         [HttpPost]
         [Route("create-event")]
         public async Task<IActionResult> OnPost(EventDto dto)

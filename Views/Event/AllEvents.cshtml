@@ -6,30 +6,36 @@
     Layout = "~/Views/Shared/AuthorizeLayout.cshtml";
 }
 
-<h1>My events</h1>
+<h1>All events</h1>
 <form asp-action="Index">
     <ul>
         @foreach (var ev in Model)
         {
             <li>
-                <strong>@ev.EventName</strong>
-                <br />
-                Дата: @ev.Date.ToShortDateString()
+                <div class="event-item">
+                    <div class="event-info">
+                        <strong>@ev.EventName <span style="margin-right: 1cm;"></span><a asp-controller="event" asp-action="registrate-to-event" asp-route-id="@ev.EventName" class="btn btn-success">Registrate</a></strong>
 
-                <ul>
-                    @foreach (var param in ev.Parameters)
-                    {
-                        <li>
-                            Параметр: @param.Title
-                            <br />
-                            Значение: @param.Value
-                        </li>
-                    }
-                </ul>
+                        <br />
+                        Дата: @ev.Date.ToShortDateString()
+
+                        <ul>
+                            @foreach (var param in ev.Parameters)
+                            {
+                                <li>
+                                    Параметр: @param.Title
+                                    <br />
+                                    Значение: @param.Value
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                   
+                </div>
             </li>
         }
     </ul>
-
+  
     <div class="form-group">
         <input type="submit" asp-area="" asp-controller="event" asp-action="create-event-page" value="Create new event" class="btn btn-primary" />
     </div>
