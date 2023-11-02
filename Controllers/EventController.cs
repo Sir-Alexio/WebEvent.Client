@@ -16,11 +16,47 @@ namespace WebEvent.Client.Controllers
             _httpClient = httpClientFactory.CreateClient("Client");
         }
 
+        [Route("events")]
+        public async Task<IActionResult> GetAllEvents()
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["token"]);
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/event/events");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                CustomException? errorMessage = System.Text.Json.JsonSerializer.Deserialize<CustomException>(await response.Content.ReadAsStringAsync());
+
+                ViewBag.Message = errorMessage.Message;
+
+                return BadRequest(errorMessage.Message);
+            }
+
+            string jsonEvents = await response.Content.ReadAsStringAsync();
+
+            List<EventDto>? deserializedEventDtos = JsonSerializer.Deserialize<List<EventDto>>(jsonEvents);
+
+            return View("AllEvents", deserializedEventDtos);
+        }
+
         [HttpPost]
         [Route("create-event")]
         public async Task<IActionResult> OnPost(EventDto dto)
         {
-            return Ok(dto);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["token"]);
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/event/create-event");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                CustomException? errorMessage = System.Text.Json.JsonSerializer.Deserialize<CustomException>(await response.Content.ReadAsStringAsync());
+
+                ViewBag.Message = errorMessage.Message;
+
+                return BadRequest(errorMessage.Message);
+            }
+
+            return View("MyEvents");
         }
 
         [Route("my-events-view")]
