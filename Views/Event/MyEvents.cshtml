@@ -1,0 +1,36 @@
+﻿@using WebEvent.API.Model.DTO;
+@model IEnumerable<EventDto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AuthorizeLayout.cshtml";
+}
+
+<h1>My events</h1>
+<form asp-action="Index">
+<ul>
+    @foreach (var ev in Model)
+    {
+        <li>
+            <strong>@ev.EventName</strong>
+            <br />
+            Дата: @ev.Date.ToShortDateString()
+
+            <ul>
+                @foreach (var param in ev.Parameters)
+                {
+                    <li>
+                        Параметр: @param.Title
+                        <br />
+                        Значение: @param.Value
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+</ul>
+
+<div class="form-group">
+    <input type="submit" asp-area="" asp-controller="event" asp-action="create-event-page" value="Create new event" class="btn btn-primary" />
+</div>
+</form>

@@ -1,0 +1,68 @@
+﻿@using WebEvent.API.Model.DTO;
+@model EventDto
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AuthorizeLayout.cshtml";
+}
+
+<h1>Create New Event</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="EventName"></label>
+        <input asp-for="EventName" class="form-control" />
+        <span asp-validation-for="EventName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Date"></label>
+        <input asp-for="Date" type="date" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <div id="parameter-container">
+        <!-- Existing parameter input fields can be here if you want to predefine some -->
+    </div>
+
+    <button type="button" id="add-parameter" class="btn btn-secondary">Add Parameter</button>
+
+        <input type="submit" asp-area="" asp-controller="event" asp-action="create-event" value="login" class="btn btn-primary" />
+
+</form>
+
+<div>Parameters Count: <span id="parameter-count">0</span></div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Counter to track the number of added parameter input fields
+            let parameterCounter = 0;
+
+            // Button to add a new parameter input field
+            const addParameterButton = document.getElementById("add-parameter");
+
+            // Container to hold parameter input fields
+            const parameterContainer = document.getElementById("parameter-container");
+
+            addParameterButton.addEventListener("click", function () {
+                parameterCounter++;
+
+                // Create a new parameter input field with Title and Value on the same line
+                const parameterInput = document.createElement("div");
+                parameterInput.innerHTML = `
+                            <div class="form-group">
+                                <label for="EventDto.Parameters[${parameterCounter}].Title">Parameter Title</label>
+                                <input type="text" class="form-control" name="EventDto.Parameters[${parameterCounter}].Title" required />
+                                <label for="EventDto.Parameters[${parameterCounter}].Value">Parameter Value</label>
+                                <input type="text" class="form-control" name="EventDto.Parameters[${parameterCounter}].Value" required />
+                            </div>
+                        `;
+
+                parameterContainer.appendChild(parameterInput);
+
+                // Update the count of added parameters
+                document.getElementById("parameter-count").textContent = parameterCounter;
+            });
+        });
+    </script>
+}
