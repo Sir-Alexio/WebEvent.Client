@@ -39,7 +39,7 @@ namespace WebEvent.Client.Controllers
                 return View("Index", dto);
             }
 
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("login-page", "login");
         }
     }
 }
